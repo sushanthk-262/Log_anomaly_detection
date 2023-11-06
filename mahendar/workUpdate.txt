@@ -1,0 +1,10 @@
+1> Trained the BERT large model on Email SPAM detection Dataset
+2>Steps involved 
+	a.Got the clean data from Kaggle
+	b.Feature Extraction
+	c.Train-Test split
+	d.Get the encodings from BertTokenizer
+	e.Convert the encodings into Dataset Objects
+	f.Import the Pretrained BERT large model along with appropriate Trainer and Training args
+	g.Train the Bert Large model using dataset Objects and Trainer.
+	h.Evaluate the model
