@@ -13,3 +13,4 @@ Process:
 	c.Import the Pretrained BERT base model along with appropriate Trainer and Training args
 	d.Train the Bert base model using dataset Objects and Trainer.
 	e.Evaluate the model
+=> The training and prediction is also done under the utilization of GPU
