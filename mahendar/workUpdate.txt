@@ -1,17 +1,15 @@
-=> Trained the BERT base and large model on Email SPAM detection Dataset
-=> Feature Extraction and train-test-split of Email SPAM dataset
-=>BERT base model
+=>Training
+	->Trained BertForSequenceClassifiaction Model for 4 Datasets {HDFS,BGL,ThunderBird,Spirit}
+=>Testing
+	->Tested all models with test data
+=>Evaluation
+	->Evaluation metrics confusion matrix,accuracy,precision,recall,f1_score are calculated for all models
+
+Process:
+=> Feature Extraction and train-test-split of dataset
+=>BERT model
 	a.Get the encodings from BertTokenizer
 	b.Convert the encodings into Dataset Objects
 	c.Import the Pretrained BERT base model along with appropriate Trainer and Training args
 	d.Train the Bert base model using dataset Objects and Trainer.
 	e.Evaluate the model
-=> Bert large model
-	a.Get the encodings from BertTokenizer
-	b.Convert the encodings into Dataset Objects
-	c.Import the Pretrained BERT large model along with appropriate Trainer and Training args
-	d.Train the Bert large model using dataset Objects and Trainer.
-	e.Evaluate the model
-	
-Issues :
-	-> Encounterd a checkpoint conflict on training both models.
