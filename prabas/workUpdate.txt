@@ -1,0 +1,11 @@
+#Preprocessing
+I have helped Sushanth in Preprocessing. I have preprocessed thunderbird datatset. 
+The dataset was already parsed so we did grouping for thunderbird and spirit datasets , used fixed-window grouping.
+Created labelled sequence which has anomalous and normal events.
+Which later sent to Mahendar for tarining and testing.
+#Training
+I have also helped mahendar in tarining.
+I have trained Thunderbird dataset, repeated same traning method which is done by mahendar for the other datasets.
+#Bert base model
+Also built Bert base model along with Mahendar in the beginning which used Tenserflow which was not compatible with the Bert model. 
+Later this error was rectified by mahendar he built another BertforSequenceClassification which later was used for tarining and testing.
