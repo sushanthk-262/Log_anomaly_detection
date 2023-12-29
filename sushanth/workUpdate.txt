@@ -1,6 +1,0 @@
-Tried working with BGL datset, but failed at parsing it in a proper way..
-hence moved onto HDFS dataset, also, this dataset was used in the "How far are we?" pdf as an example aswell, hence this dataset is chosen.
-
-Data parsing done on HDFS dataset, stored in list of lists, although this data needs to be cleaned up real soon!
-
-The python script for te same has been pushed to the repo aswell!
