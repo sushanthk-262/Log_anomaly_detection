@@ -1,0 +1,26 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {section}{\numberline {2}Objective}{3}{section.2}%
+\contentsline {section}{\numberline {3}Explanation of Model}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Starting the Flower Server}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Flower Client Implementation}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Fashion MNIST Dataset}{5}{subsection.3.3}%
+\contentsline {subsubsection}{\numberline {3.3.1}Images}{5}{subsubsection.3.3.1}%
+\contentsline {subsubsection}{\numberline {3.3.2}Classes}{5}{subsubsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.3}Size}{5}{subsubsection.3.3.3}%
+\contentsline {section}{\numberline {4}Basic Implementing a Federated Learning Setup using Terminals as Clients with FashionMNIST Dataset}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Starting the Flower Server}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Starting Flower Clients}{6}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Federated client for aggregation}{6}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Importing the necessary libraries}{6}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Custom Dataset Class:}{6}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Initialization and Data Preprocessing:}{7}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Model Saving and Loading:}{7}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Training Arguments and Trainer Initialization:}{8}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}FlowerClient Class:}{8}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Fitting the Model (Training):}{8}{subsection.5.7}%
+\contentsline {subsection}{\numberline {5.8}Evaluating the Model:}{9}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Printing Fit History and Evaluation Metrics:}{9}{subsection.5.9}%
+\contentsline {subsection}{\numberline {5.10}Flower Client Initialization and Execution:}{9}{subsection.5.10}%
+\contentsline {section}{\numberline {6}HDFS Trained Model Aggregation With Federated Learning}{9}{section.6}%
+\contentsline {section}{\numberline {7}Conclusion}{9}{section.7}%
+\contentsline {section}{\numberline {8}Reference}{10}{section.8}%

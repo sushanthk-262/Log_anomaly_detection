@@ -1,0 +1,41 @@
+In this I have implimented federated model using flower framework,
+ Now let us consider the flower server part :
+
+Here,we are Starting the Flower server:
+
+    i) fl.server.start_server is called to start the Flower server. 
+    It listens on a specific address and port (localhost and the port specified as a command-line argument).
+    ii) ServerConfig is used to configure the server with the number of federated learning rounds (num_rounds) and the maximum message length.
+
+Now let us consider the flower client part (The same structure is followed for custom_client_2.py with different data distribution and data loading changes):
+
+1) Initially we are importing the necessary libraries for the implimentation:
+    i) The flwr is for federated learning.
+    ii) The tensorflow and keras is for machine learning and neural network models.
+    iii) The sys is to access command-line arguments.
+    iv) the numpyis for numerical operations.
+2) We are Defining auxiliary methods :
+    i) getDist: This method is meant for visualizing data class distribution.
+    ii) getData: This method is meant to customize the data distribution.
+3) Now Loading and compile the Keras model:
+    i) A neural network model is defined using the Keras Sequential API. It's a simple feedforward model with three layers: input, hidden, and output layers.
+    ii) The model is compiled with an optimizer ("adam"), a loss function ("sparse_categorical_crossentropy"), and a metric to track ("accuracy").
+4) Now we need to Load the dataset:
+    i) The script loads the Fashion MNIST dataset using TensorFlow's built-in dataset loader. 
+    ii) This dataset contains images and corresponding labels.
+    iii) The images are normalized to values between 0 and 1.
+    iv) A data distribution (dist) is specified for Fashion MNIST. This distribution controls how many samples are included from each class (0-9).
+5) Now we need to define the Flower client:
+    i) Here, a custom Flower client class, CustomClient, is defined, in which it extends fl.client.NumPyClient.
+    ii) In this there are three main methods are implemented: 
+        a) get_parameters : This method returns the current model's weights..
+        b) fit : This method is used for model training. 
+        It receives model parameters, updates the model, 
+        and fits the model to the training data for one epoch. 
+        and It returns the updated model parameters and the number of training samples used.
+        c) evaluate : This method evaluates the model on the test data and returns the loss and accuracy.
+
+6) Finally we need to Start the Flower client:
+    i) fl.client.start_numpy_client is used to start the Flower client. 
+    ii) It connects to the Flower server at the specified address.
+    iii) The custom client class (CustomClient) is used, and the maximum message length is set to ensure compatibility with the server.

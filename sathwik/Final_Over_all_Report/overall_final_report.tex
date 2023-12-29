@@ -1,0 +1,258 @@
+\documentclass[titlepage]{article}
+
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{tabularx}
+\usepackage{algorithmic}
+\usepackage{algorithm2e}
+\usepackage{blindtext}
+\usepackage{titlesec}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\hypersetup{
+  linkbordercolor=white, % Set the link border color to white
+}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+\begin{document}
+
+\title{\Huge Log Anomaly Detection}
+\author{\large Group 3 \\ Sushanth Kulkarni UOH \\Mahendar Byra UOH \\Prabas Leti UOH \\Sathwik Katta UOH}
+\date{\large \today}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Abstract}
+This project addresses the task of log anomaly detection using a federated learning approach across four diverse datasets: HDFS, BGL, Spirit, and Thunderbird. The primary objective is to determine whether a sequence of related logs exhibits anomalous behavior. Initial efforts involve meticulous data preprocessing to ensure the datasets are prepared for training. Subsequently, we employ the "BertForSequenceClassification" model, leveraging its sequence analysis capabilities.\\
+The unique federated learning framework is employed to train individual models on each dataset, ensuring privacy and security in the learning process. Once trained, these models are aggregated into a global model, representing a comprehensive understanding of log patterns across datasets. This global model is then utilized for effective log anomaly detection.\\
+Notably, the project includes a comprehensive evaluation stage, computing vital metrics such as accuracy, precision, recall, and F1 score. These metrics serve as quantitative measures of the model's performance and effectiveness in detecting anomalies within log sequences. \\
+The approach embraces the power of distributed learning to address log data's inherent diversity, providing a robust solution for anomaly detection. This project stands at the intersection of machine learning, cybersecurity, and distributed systems, contributing insights and methodologies applicable to various domains. The achieved results showcase the efficiency of the proposed federated learning model in identifying anomalous log sequences, laying the foundation for enhanced security in diverse log data environments.
+
+\newpage
+\section{Introduction}
+The solution approach to the problem involves mainly the following steps:
+\begin{itemize}
+    \item Data Preprocessing
+    \item Model Design
+    \item Federated training 
+\end{itemize}
+\textbf{Data Preprocessing:} \\
+The data preprocessing phase encompasses log data collection from diverse sources, log parsing, and log grouping. Various grouping techniques, such as sliding window, fixed window, and session window, are employed to systematically organize log entries. Once the preprocessing is completed, the refined data is forwarded to the subsequent modeling stage. \\
+
+\textbf{Model Design:} \\
+The model design stage includes the creation, training, testing, and evaluation of the \textbf{BertForSequenceClassification} model at the local system. During this phase, the model is trained, and evaluation metrics are computed. This process is iteratively executed for each dataset. Once the model code is prepared, it proceeds to the subsequent step: Federated Training. \
+
+\textbf{Federated Training:} \\
+The federated training phase entails establishing a federated client-server setup. The code received in the prior step is executed at each client. In this federated training stage, distinct models are trained using four different datasets. The aggregation step involves gathering all the models generated from the clients and aggregating them at the server. The resultant aggregated model is referred to as the Global Model, representing the final model capable of predicting outputs for diverse datasets.
+
+
+\section{Data Preprocessing}
+Daata preprosseing is primarily spilt into the following sub tasks: \\
+\begin{itemize}
+\item Find RAW log data, if unavailable find parsed log data.
+\item Remove empty and duplicate log entries from RAW log data.
+\item Parse RAW data into structured format, categorizing each entry into events.
+\item Group the parsed, structured log data into set of events called a sequence.
+\end{itemize}
+
+\subsection{Find Data}
+The following datasets have been considered for anomaly detection:
+\begin{enumerate}
+\item HDFS
+\item BGL
+\item Thunderbird
+\item Spirit
+\end{enumerate}
+RAW and parsed datasets for HDFS and BGL were available at:
+\begin{itemize}
+    \item \href{https://github.com/logpai/loglizer/tree/master/data/HDFS}{https://github.com/logpai/loglizer/tree/master/data/HDFS}
+    \item \href{https://zenodo.org/records/8115559}{https://zenodo.org/records/8115559}
+    \item \href{https://github.com/logpai/loghub/tree/master}{https://github.com/logpai/loghub/tree/master}
+\end{itemize}
+
+\subsection{Parse Data}
+\textbf{Log Hub} only provides us 2k lines of raw data, which is not adequate, hence I've used 100k or more entries of log data available at \textbf{LogPai}. \\
+Raw data is parsed using logparser python library and we use, \textbf{Drain} parser is primarily used. \\
+\subsection{Grouping parsed Data}
+The parsed data is now in a structured format, a key component here is \textit{Event Id}! Each Event Id represent a particular static part of a log entry, we group these Event Ids, let the set of evenets be called a sequence, $S_i$. We generate all such $S_i$ based on a grouping parameter.\\
+Grouping parameters: \\
+\begin{itemize}
+    \item HDFS : Session window protocol, \textbf{BlockId}
+    \item BGL : Session window protocol, \textbf{Node Id}
+    \item Thunderbird : Fixed Window, \textbf{Timestamp, window size: 900sec}
+    \item Spirit : Fixed Window protocol, \textbf{Timestamp, Window size: 113sec}
+\end{itemize}
+\subsection{Labelling Sequnence}
+The general idea: "\textit{If all the events in a  sequence are Normal, then the sequence is labelled 'Normal' else 'Anomalous'}" \\
+
+
+
+\section{Model specific tasks}
+The model design model mainly includes the following tasks.
+\begin{itemize}
+    \item Feature Extraction and Data splitting.
+    \item Model training.
+    \item Model Evaluation and Evaluation metrics.
+\end{itemize}
+
+\subsection{Feature Extraction and data splitting}
+Feature extraction involves the data division into input(X) and output(lables or y) and assigning 0's and 1's to Normal and Anomolous log sequences.\\
+After data feature extraction , the Data is splitted into training and testing data which will be used in Training and Evaluation.
+
+\subsection{Model Training}
+The model training involves the following tasks:
+\begin{itemize}
+    \item  \textbf{Pretrained model and Tokenizer loading} : \\
+    The pretrained BertForSequenceClassification and BertTokenizer are loaded from the transformers library.\\
+    
+    \item \textbf{Encodings and Datasets} :\\
+    Using the Tokenizer and CustomDataset class the training and testing data is converted into encodings and datasets. These datasets will be used in the training. \\
+
+    \item \textbf{Defining Training arguments and Trainer} : \\
+    The training arguments decides how the models should be trained. It includes number of epochs ,batch size,etc.The trainer is the one which takes the datasets all trains the model. \\
+    
+    \item  \textbf{Training and Saving the model} : \\
+    The trainer calls train() method which trains the model.Then model.save\_pretrained() is used to save the model.\\
+\end{itemize}
+
+\subsection{Model Evaluation and Evaluation metrics}
+Once the model is trained, the test data is used to evaluate the model. In the evaluation , The following metrics are computed. These metrics decides model efficiency.
+\begin{itemize}
+    \item Accuracy
+    \item Precision
+    \item Recall
+    \item F1 score
+\end{itemize}
+The Evaluation metrics for BGL trained model for about 1000 data entries of 70,000 entries is :\\
+Confusion matrix:
+\[
+\begin{bmatrix}
+  3 & 0 \\
+  0 & 37 \\
+\end{bmatrix}
+\]
+\\
+Accuracy: 1.0 \\
+Precision: 1.0 \\
+Recall: 1.0 \\
+F1 Score: 1.0\\
+\\
+Similarly the Evaluation metrics can be calculated for other datasets also.
+Github link for training and evaluation code : \\
+ \href{https://github.com/sushanthk-262/Log_anomaly_detection/tree/main/mahendar}{https://github.com/sushanthk-262/Log\_anomaly\_detection/tree/main/mahendar} \\
+
+ 
+\section{Fedarated Learning}
+\subsection{Federated Learning Process with Flower Client:}
+
+\subsection{Initialization}
+	Each participating device, known as a Flower client, initializes its own local model with random parameters.
+	
+\subsection{ Model Distribution:}
+	 The central server (aggregator) distributes the initial model parameters to all Flower clients.
+
+\subsection{Local Model Training:}
+	Flower clients independently train their local models using their own local datasets and Training is done on the device without transmitting raw data to the central server.
+
+\subsection{Model Update:}	
+After local training, each Flower client computes the difference between its local model and the global model obtained from the central server. This difference is known as the model update.
+
+\subsection{Model Update Transmission:}
+Flower clients send their model updates (not the raw data) back to the central server. This ensures privacy as raw data remains on the local devices.
+	
+\subsection{Aggregation at Central Server:}
+The central server aggregates the received model updates from all Flower clients.
+This aggregation typically involves averaging the model updates to obtain a new global model.
+
+\subsection{Updated Global Model Distribution:}
+The central server distributes the updated global model parameters back to all Flower clients.
+
+\subsection{Iterative Training:}
+Steps 3-7 are repeated iteratively for multiple rounds.
+Each iteration refines the global model as Flower clients continue to train on their local datasets.
+
+\subsection{Convergence Check:}
+The federated learning process continues until the global model converges to a satisfactory state, or a predefined number of iterations is reached.
+
+\subsection{Final Global Model:}
+The final global model represents the collective knowledge learned from all Flower clients' local datasets.
+
+\subsection{Model Deployment:}
+The trained global model can be deployed for making predictions or inferences.
+
+\subsection{Privacy and Security Measures:}
+Throughout the process, privacy and security measures, such as encryption and differential privacy, may be employed to protect sensitive information.
+\\ \\ \\
+By following all the steps i have tryed to aggregated local trained weights of the two sub trained models of the whole hdfs trained model and the results thati have got were :
+\\
+for 3 rounds of aggregated weights : \\
+	for client-1 : \\
+	\begin{verbatim}
+Fit history: {'loss': 0.08982961624860764} \\
+    100% 10/10 [00:03<00:00, 2.71it/s]
+    Now the global Eval accuracy: 0.90801932066679
+
+Fit history: {'loss': 0.09201569110155106} \\
+    100% 10/10 [00:02<00:00, 4.19it/s]
+    Now the global Eval accuracy: 0.90801932066679
+
+Fit history: {'loss': 0.09195733815431595} \\
+    100% 10/10 [00:01<00:00, 7.14it/s]
+    Now the global Eval accuracy: 0.90801932066679
+\end{verbatim}
+
+for client-2 : \\
+	\begin{verbatim}
+Fit history: {'loss':0.09417649358510971 }} \\
+    100% 10/10 [00:03<00:00, 6.71it/s]
+    Now the global Eval accuracy: 0.908007650077343
+
+Fit history: {'loss': 0.09201569110155106 } \\
+    100% 10/10 [00:02<00:00, 3.10it/s]
+    Now the global Eval accuracy:0.908007650077343
+
+Fit history: {'loss': 0.09207404404878616 } \\
+    100% 10/10 [00:01<00:00, 10.04it/s]
+    Now the global Eval accuracy:0.908007650077343
+\end{verbatim}
+
+
+
+\section{Future Scope}
+In the preceding methodology, the Bert model is employed for both representation and classification purposes. In contrast, an alternative strategy utilizes Bert solely for representation learning. The representation Bert model is trained in a federated manner, contributing to the development of a comprehensive global representation model. This approach allows individual clients to establish their distinct classification models, thereby affording them a high degree of flexibility. 
+
+\section{Conclusion}
+group conclusion
+\section{References}
+add if there are any otherwise remove it.
+\end{document}
